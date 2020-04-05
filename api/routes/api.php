@@ -28,17 +28,25 @@ Route::get('accounts/{id}/transactions', function ($id) {
     $account = DB::table('transactions')
              ->whereRaw("`from`=$id OR `to`=$id")
              ->get();
-
+    if(count($account) == 0)  return array("error"=>"Error: Account does not exist");
     return $account;
 });
 
 Route::post('accounts/{id}/transactions', function (Request $request, $id) {
-    if($id < 1) return false;
+    if($id < 1) return array("error"=>"Error: Account does not exist");
     $to = $request->input('to');
     $amount = $request->input('amount');
     $details = $request->input('details');
-    if($to < 1) return false;
-    if($amount < 1) return false;
+    //make sure accounts exist before doing transactions
+    if($to < 1) return array("error"=>"Error: Account does not exist");
+    $id_exists = check_account_exists($id);
+    $to_exists = check_account_exists($to);
+    if(!$id_exists) return array("error"=>"Error: Account does not exist");
+    if(!$to_exists) return array("error"=>"Error: Account does not exist");
+    //make sure ammount is correct
+    if($amount < 1) return array("error"=>"Error: Incorrect amount");
+    $balance = check_balance($id);
+    if($amount > $balance) return array("error"=>"Error: Amount is more than account balance");
 
     $account = DB::table('accounts')
              ->whereRaw("id=$id")
@@ -64,3 +72,20 @@ Route::get('currencies', function () {
 
     return $account;
 });
+
+
+function check_balance($id){
+    $account = DB::table('accounts')
+        ->whereRaw("id=$id")
+        ->get()->first();
+    return $account->balance;
+
+}
+
+function check_account_exists($id){
+    $account = DB::table('accounts')
+        ->whereRaw("id=$id")
+        ->get();
+    if(count($account) == 0)  return false;
+    else return true;
+}

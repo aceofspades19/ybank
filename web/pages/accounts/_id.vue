@@ -153,7 +153,11 @@ export default {
         }/transactions`,
 
         this.payment
-      );
+      ).then(function(response) {
+        if(response.data){
+          alert(response.data.error);
+        }
+      });
 
       that.payment = {};
       that.show = false;
