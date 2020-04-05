@@ -100,8 +100,9 @@ export default {
       .get(`http://herpderp.ca/api/accounts/${this.$route.params.id}`)
       .then(function(response) {
         if (!response.data.length) {
-          window.location.href = "/";
+          window.location.href = "/ybankweb";
         } else {
+
           that.account = response.data[0];
 
           if (that.account && that.transactions) {

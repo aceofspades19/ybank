@@ -15,14 +15,16 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('accounts/{id}', function ($id) {
+    if($id < 1) return array("error"=>"Error: Account does not exist");
     $account = DB::table('accounts')
              ->whereRaw("id=$id")
              ->get();
-
+    if(count($account) == 0)  return array("error"=>"Error: Account does not exist");
     return $account;
 });
 
 Route::get('accounts/{id}/transactions', function ($id) {
+    if($id < 1) return "";
     $account = DB::table('transactions')
              ->whereRaw("`from`=$id OR `to`=$id")
              ->get();
@@ -31,9 +33,12 @@ Route::get('accounts/{id}/transactions', function ($id) {
 });
 
 Route::post('accounts/{id}/transactions', function (Request $request, $id) {
+    if($id < 1) return false;
     $to = $request->input('to');
     $amount = $request->input('amount');
     $details = $request->input('details');
+    if($to < 1) return false;
+    if($amount < 1) return false;
 
     $account = DB::table('accounts')
              ->whereRaw("id=$id")
