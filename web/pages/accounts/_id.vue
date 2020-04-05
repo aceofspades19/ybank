@@ -97,10 +97,10 @@ export default {
     const that = this;
 
     axios
-      .get(`http://localhost:8000/api/accounts/${this.$route.params.id}`)
+      .get(`http://herpderp.ca/api/accounts/${this.$route.params.id}`)
       .then(function(response) {
         if (!response.data.length) {
-          window.location = "/";
+          window.location.href = "/";
         } else {
           that.account = response.data[0];
 
@@ -112,7 +112,7 @@ export default {
 
     axios
       .get(
-        `http://localhost:8000/api/accounts/${
+        `http://herpderp.ca/api/accounts/${
           that.$route.params.id
         }/transactions`
       )
@@ -147,7 +147,7 @@ export default {
       evt.preventDefault();
 
       axios.post(
-        `http://localhost:8000/api/accounts/${
+        `http://herpderp.ca/api/accounts/${
           this.$route.params.id
         }/transactions`,
 
@@ -160,10 +160,10 @@ export default {
       // update items
       setTimeout(() => {
         axios
-          .get(`http://localhost:8000/api/accounts/${this.$route.params.id}`)
+          .get(`http://herpderp.ca/api/accounts/${this.$route.params.id}`)
           .then(function(response) {
             if (!response.data.length) {
-              window.location = "/";
+              window.location.href = "/";
             } else {
               that.account = response.data[0];
             }
@@ -171,7 +171,7 @@ export default {
 
         axios
           .get(
-            `http://localhost:8000/api/accounts/${
+            `http://herpderp.ca/api/accounts/${
               that.$route.params.id
             }/transactions`
           )
