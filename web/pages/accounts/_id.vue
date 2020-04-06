@@ -157,48 +157,49 @@ export default {
         if(response.data){
           alert(response.data.error);
         }
-      });
+      }).then(function(){
 
-      that.payment = {};
-      that.show = false;
+        that.payment = {};
+        that.show = false;
 
-      // update items
-      setTimeout(() => {
+        // update items
         axios
-          .get(`http://herpderp.ca/api/accounts/${this.$route.params.id}`)
-          .then(function(response) {
-            if (!response.data.length) {
-              window.location.href = "/";
-            } else {
-              that.account = response.data[0];
-            }
-          });
+            .get(`http://herpderp.ca/api/accounts/${that.$route.params.id}`)
+            .then(function(response) {
+              if (!response.data.length) {
+                window.location.href = "/";
+              } else {
+                that.account = response.data[0];
+              }
+            });
 
         axios
-          .get(
-            `http://herpderp.ca/api/accounts/${
-              that.$route.params.id
-            }/transactions`
-          )
-          .then(function(response) {
-            that["transactions"] = response.data;
+            .get(
+                `http://herpderp.ca/api/accounts/${
+                        that.$route.params.id
+                }/transactions`
+            )
+            .then(function(response) {
+              that["transactions"] = response.data;
 
-            var transactions = [];
-            for (let i = 0; i < that.transactions.length; i++) {
-              that.transactions[i].amount =
-                (that.account.currency === "usd" ? "$" : "€") +
-                that.transactions[i].amount;
+              var transactions = [];
+              for (let i = 0; i < that.transactions.length; i++) {
+                that.transactions[i].amount =
+                        (that.account.currency === "usd" ? "$" : "€") +
+                        that.transactions[i].amount;
 
-              if (that.account.id != that.transactions[i].to) {
-                that.transactions[i].amount = "-" + that.transactions[i].amount;
+                if (that.account.id != that.transactions[i].to) {
+                  that.transactions[i].amount = "-" + that.transactions[i].amount;
+                }
+
+                transactions.push(that.transactions[i]);
               }
 
-              transactions.push(that.transactions[i]);
-            }
+              that.transactions = transactions;
+            });
+      });
 
-            that.transactions = transactions;
-          });
-      }, 200);
+
     }
   }
 };
