@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('accounts/{id}', function ($id) {
     if($id < 1) return array("error"=>"Error: Account does not exist");
+    if(!check_account_exists($id)) return array("error"=>"Error: Account does not exist");
     $account = DB::table('accounts')
              ->whereRaw("id=$id")
              ->get();
@@ -25,6 +26,7 @@ Route::get('accounts/{id}', function ($id) {
 
 Route::get('accounts/{id}/transactions', function ($id) {
     if($id < 1)   return array("error"=>"Error: Account does not exist");
+    if(!check_account_exists($id)) return array("error"=>"Error: Account does not exist");
     $account = DB::table('transactions')
              ->whereRaw("`from`=$id OR `to`=$id")
              ->get();
